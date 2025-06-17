@@ -13,7 +13,6 @@ public class UIActionPanel : MonoBehaviour
     public Button actionButton3;
     public Button actionButton4;
 
-    // Callback para finalizar turno
     private System.Action onEndTurn;
 
     private void Awake()
@@ -24,18 +23,12 @@ public class UIActionPanel : MonoBehaviour
         playerActionHUD.SetActive(false);
 
         endTurnButton.onClick.AddListener(OnEndTurnPressed);
-
-        // Podés enlazar los otros botones si querés acciones específicas más adelante
-        // actionButton1.onClick.AddListener(() => HacerAlgo());
     }
 
 
     public void ShowPlayerActionHUD(PlayerCharacter character)
     {
         playerActionHUD.SetActive(true);
-
-        // Aquí podrías habilitar/deshabilitar botones según AP, estado, etc.
-        // Por ahora asumimos que todos los botones están disponibles
     }
 
 
@@ -56,7 +49,7 @@ public class UIActionPanel : MonoBehaviour
 
     private void OnEndTurnPressed()
     {
-        onEndTurn?.Invoke(); // Ejecuta el callback si está asignado
+        onEndTurn?.Invoke();
     }
 
 
@@ -75,6 +68,5 @@ public class UIActionPanel : MonoBehaviour
     public void SetUpcomingTurn(Character next)
     {
         Debug.Log($"Siguiente turno: {next.characterName}");
-        // Podés actualizar un texto o icono en la interfaz si querés
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < characters.Count; i++)
         {
             Character c = characters[i];
-            result += $"{i + 1}. {c.characterName} (VEL: {c.speed})\n";
+            int total = c.speed + c.initiativeRoll;
+            result += $"{i + 1}. {c.characterName} (VEL: {total} = {c.speed} + {c.initiativeRoll})\n";
         }
 
         turnOrderText.text = result.TrimEnd(); 
@@ -31,6 +33,6 @@ public class UIManager : MonoBehaviour
 
     public void SetCurrentTurn(Character character)
     {
-        currentTurnText.text = $"Turno actual: {character.characterName}";
+        currentTurnText.text = $"Turno actual: {character.characterName} \n Ronda:{RoundManager.CurrentRound}";
     }
 }

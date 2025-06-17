@@ -9,12 +9,11 @@ public class PlayerCharacter : Character
         UIActionPanel.Instance.ShowPlayerActionHUD(this);
 
         bool waiting = true;
-        UIActionPanel.Instance.SetEndTurnCallback(() => waiting = false); // Se registra el callback
+        UIActionPanel.Instance.SetEndTurnCallback(() => waiting = false);
 
         while (waiting)
             yield return null;
 
-        // Ocultar el panel cuando finaliza
         UIActionPanel.Instance.HidePlayerActionHUD();
         UIActionPanel.Instance.ClearCallbacks();
     }

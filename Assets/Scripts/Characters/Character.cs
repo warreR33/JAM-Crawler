@@ -8,14 +8,16 @@ public enum TeamType
     Enemy
 }
 
-public abstract class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour, ISelectable
 {
 
     public System.Action OnPlayerActionCompleted;
 
     [Header("Stats")]
     public string characterName;
+
     public int speed = 10;
+    [HideInInspector] public int initiativeRoll = 0;
 
     public int maxHP = 100;
     public int currentHP = 100;
@@ -26,6 +28,16 @@ public abstract class Character : MonoBehaviour
     public TeamType team;
 
     public bool IsAlive => currentHP > 0;
+    
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+    private bool isSelected = false;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+    }
 
     public void TakeDamage(int amount)
     {
@@ -53,5 +65,23 @@ public abstract class Character : MonoBehaviour
     public virtual IEnumerator OnTurnEnd()
     {
         yield return null;
+    }
+    
+
+
+    public void OnSelected()
+    {
+        if (isSelected) return;
+
+        isSelected = true;
+        spriteRenderer.color = Color.yellow; 
+    }
+
+    public void OnDeselected()
+    {
+        if (!isSelected) return;
+
+        isSelected = false;
+        spriteRenderer.color = originalColor;
     }
 }
