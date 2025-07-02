@@ -40,6 +40,7 @@ public abstract class Character : MonoBehaviour, ISelectable
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isSelected = false;
+    private bool isHovered = false;
 
     private void Awake()
     {
@@ -73,22 +74,48 @@ public abstract class Character : MonoBehaviour, ISelectable
     {
         yield return null;
     }
-    
+
+    private void OnMouseEnter()
+    {
+        isHovered = true;
+        UpdateColor();
+    }
+
+    private void OnMouseExit()
+    {
+        isHovered = false;
+        UpdateColor();
+    }
+
+
+    private void UpdateColor()
+    {
+        if (isSelected)
+        {
+            spriteRenderer.color = Color.yellow;
+        }
+        else if (isHovered)
+        {
+            spriteRenderer.color = Color.cyan; 
+        }
+        else
+        {
+            spriteRenderer.color = originalColor;
+        }
+    }
 
 
     public void OnSelected()
     {
         if (isSelected) return;
-
         isSelected = true;
-        spriteRenderer.color = Color.yellow; 
+        UpdateColor();
     }
 
     public void OnDeselected()
     {
         if (!isSelected) return;
-
         isSelected = false;
-        spriteRenderer.color = originalColor;
+        UpdateColor();
     }
 }
