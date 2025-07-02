@@ -13,19 +13,27 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public System.Action OnPlayerActionCompleted;
 
-    [Header("Stats")]
+    [Header("Identidad")]
     public string characterName;
+    public TeamType team;
 
+    [Header("Turnos")]
+    public int maxEnergy = 10;
+    public int currentEnergy = 0;
     public int speed = 10;
     [HideInInspector] public int initiativeRoll = 0;
 
+    [Header("Vida")]
     public int maxHP = 100;
     public int currentHP = 100;
 
-    public int maxAP = 3;
-    public int currentAP = 3;
+    [Header("Combate")]
+    public int power = 10;                 
+    public int defense = 5;               
 
-    public TeamType team;
+    [Range(0f, 1f)]
+    public float critChance = 0.1f;       
+    public float critMultiplier = 1.5f;   
 
     public bool IsAlive => currentHP > 0;
     
@@ -53,7 +61,6 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public virtual IEnumerator OnTurnStart()
     {
-        currentAP = maxAP;
         yield return null;
     }
 
