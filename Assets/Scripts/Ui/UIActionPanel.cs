@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using TMPro;
 
 public class UIActionPanel : MonoBehaviour
 {
@@ -15,6 +17,13 @@ public class UIActionPanel : MonoBehaviour
 
     private System.Action onEndTurn;
 
+    private System.Action<Character> onTargetSelected;
+    public bool isTargeting = false;
+
+    public bool IsTargeting => isTargeting;
+
+    private PlayerCharacter currentPlayer;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -23,14 +32,121 @@ public class UIActionPanel : MonoBehaviour
         playerActionHUD.SetActive(false);
 
         endTurnButton.onClick.AddListener(OnEndTurnPressed);
+
+        actionButton1.onClick.AddListener(() =>
+        {
+            SetAbilityCallback((Character target) =>
+            {
+                Debug.Log("Ejecutar habilidad básica contra " + target.characterName);
+
+                if (PlayerCharacter.Current != null)
+                {
+                    PlayerCharacter.Current.PerformBasicAttack(target);
+                }
+
+                actionButton1.interactable = false;
+            });
+        });
     }
 
+
+    private void SetupAbilityButtons(PlayerCharacter player)
+    {
+        var buttons = new Button[] { actionButton1, actionButton2, actionButton3, actionButton4 };
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (i < player.abilities.Length)
+            {
+                AbilitySO ability = player.abilities[i];
+                Button btn = buttons[i];
+                btn.gameObject.SetActive(true);
+
+                TextMeshProUGUI textComponent = btn.GetComponentInChildren<TextMeshProUGUI>();
+                if (textComponent != null)
+                {
+                    textComponent.text = ability.abilityName;
+                }
+
+                int index = i;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() =>
+                {
+                    SetAbilityCallback((Character target) =>
+                    {
+                        ability.Activate(player, target);
+                        player.SpendEnergy(ability.energyCost);
+                        player.OnPlayerActionCompleted?.Invoke();
+                    });
+
+                    // Borra la selección previa
+                    SelectionManager.Instance.ClearSelection();
+                });
+            }
+            else
+            {
+                buttons[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void SetAbilityCallback(System.Action<Character> callback)
+    {
+        onTargetSelected = callback;
+        isTargeting = true;
+
+        SelectionManager.Instance.ClearSelection();
+        Debug.Log("Modo selección de objetivo activado");
+    }
+
+    public void OnCharacterClicked(Character target)
+    {
+        if (!isTargeting || onTargetSelected == null)
+            return;
+
+        isTargeting = false;
+
+        onTargetSelected.Invoke(target);
+        onTargetSelected = null;
+
+            if (target is ISelectable selectableTarget)
+        selectableTarget.OnDeselected();
+
+
+        SelectionManager.Instance.ClearSelection();
+    }
+
+    public void SetupAbilities(PlayerCharacter character)
+    {
+        actionButton1.GetComponentInChildren<TMPro.TMP_Text>().text = character.basicAttack != null ? character.basicAttack.abilityName : "Atacar";
+
+        for (int i = 0; i < character.abilities.Length; i++)
+        {
+            var button = i switch
+            {
+                0 => actionButton2,
+                1 => actionButton3,
+                2 => actionButton4,
+                _ => null
+            };
+
+            if (button != null && character.abilities[i] != null)
+            {
+                button.GetComponentInChildren<TMPro.TMP_Text>().text = character.abilities[i].abilityName;
+            }
+        }
+    }
 
     public void ShowPlayerActionHUD(PlayerCharacter character)
     {
         playerActionHUD.SetActive(true);
-    }
+        SetupAbilities(character);
+        actionButton1.interactable = true;
+        actionButton2.interactable = true;
+        actionButton3.interactable = true;
+        actionButton4.interactable = true;
 
+    }
 
     public void HidePlayerActionHUD()
     {
@@ -45,6 +161,8 @@ public class UIActionPanel : MonoBehaviour
     public void ClearCallbacks()
     {
         onEndTurn = null;
+        onTargetSelected = null;
+        isTargeting = false;
     }
 
     private void OnEndTurnPressed()
@@ -52,17 +170,11 @@ public class UIActionPanel : MonoBehaviour
         onEndTurn?.Invoke();
     }
 
+    // === Turn Info ===
 
     public void SetCurrentTurn(Character current)
     {
-        if (current.team == TeamType.Player)
-        {
-            Debug.Log("Turno del jugador");
-        }
-        else
-        {
-            Debug.Log("Turno del enemigo");
-        }
+        Debug.Log($"Turno de: {current.characterName} ({current.team})");
     }
 
     public void SetUpcomingTurn(Character next)

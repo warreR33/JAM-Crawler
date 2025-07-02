@@ -13,25 +13,34 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public System.Action OnPlayerActionCompleted;
 
-    [Header("Stats")]
+    [Header("Identidad")]
     public string characterName;
+    public TeamType team;
 
+    [Header("Turnos")]
+    public int maxEnergy = 10;
+    public int currentEnergy = 0;
     public int speed = 10;
     [HideInInspector] public int initiativeRoll = 0;
 
+    [Header("Vida")]
     public int maxHP = 100;
     public int currentHP = 100;
 
-    public int maxAP = 3;
-    public int currentAP = 3;
+    [Header("Combate")]
+    public int power = 10;                 
+    public int defense = 5;               
 
-    public TeamType team;
+    [Range(0f, 1f)]
+    public float critChance = 0.1f;       
+    public float critMultiplier = 1.5f;   
 
     public bool IsAlive => currentHP > 0;
     
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isSelected = false;
+    private bool isHovered = false;
 
     private void Awake()
     {
@@ -53,7 +62,6 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public virtual IEnumerator OnTurnStart()
     {
-        currentAP = maxAP;
         yield return null;
     }
 
@@ -66,22 +74,48 @@ public abstract class Character : MonoBehaviour, ISelectable
     {
         yield return null;
     }
-    
+
+    private void OnMouseEnter()
+    {
+        isHovered = true;
+        UpdateColor();
+    }
+
+    private void OnMouseExit()
+    {
+        isHovered = false;
+        UpdateColor();
+    }
+
+
+    private void UpdateColor()
+    {
+        if (isSelected)
+        {
+            spriteRenderer.color = Color.yellow;
+        }
+        else if (isHovered)
+        {
+            spriteRenderer.color = Color.cyan; 
+        }
+        else
+        {
+            spriteRenderer.color = originalColor;
+        }
+    }
 
 
     public void OnSelected()
     {
         if (isSelected) return;
-
         isSelected = true;
-        spriteRenderer.color = Color.yellow; 
+        UpdateColor();
     }
 
     public void OnDeselected()
     {
         if (!isSelected) return;
-
         isSelected = false;
-        spriteRenderer.color = originalColor;
+        UpdateColor();
     }
 }
