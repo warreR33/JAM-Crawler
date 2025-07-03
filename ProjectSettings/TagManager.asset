@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: IconFrame
+    uniqueID: 1951048769
+    locked: 0
+  - name: IconBG
+    uniqueID: 303321403
+    locked: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BasicAttack
   m_EditorClassIdentifier: 
   abilityName: Slash
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 864077c48d6d03c4b8bd62d3d24872e9, type: 3}
   energyCost: 0
   visualEffectPrefab: {fileID: 5191405745487512432, guid: 9d20d62e6a49e2f4a86b003a16d98130, type: 3}
   powerMultiplier: 1.2

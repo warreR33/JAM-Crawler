@@ -33,7 +33,9 @@ public class TurnManager : MonoBehaviour
 
     private static IEnumerator HandleTurn(Character character)
     {
-        UIManager.Instance.SetCurrentTurn(character);
+
+        int index = RoundManager.Instance.turnOrder.IndexOf(character);
+        UIManager.Instance.HighlightCurrentTurn(index);
 
         CurrentPhase = TurnPhase.TurnStart;
         yield return character.OnTurnStart();

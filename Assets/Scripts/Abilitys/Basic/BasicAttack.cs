@@ -17,5 +17,10 @@ public class BasicAttack : AbilitySO
 
         target.TakeDamage(Mathf.RoundToInt(damage));
         Debug.Log($"{user.characterName} usa {abilityName} en {target.characterName}, causando {damage} de daño.");
+
+        if (user is PlayerCharacter player)
+        {
+            player.GainEnergy(1);
+        }
     }
 }

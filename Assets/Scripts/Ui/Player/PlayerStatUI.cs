@@ -12,6 +12,7 @@ public class PlayerStatUI : MonoBehaviour
     public TMP_Text energyText;
     public TMP_Text HPText;
     public Image healthBarFill;
+    public Image energyBarFill;
 
     private PlayerCharacter target;
 
@@ -28,10 +29,15 @@ public class PlayerStatUI : MonoBehaviour
     {
         if (target == null) return;
 
-        energyText.text = $"Energía: {target.currentEnergy}/{target.maxEnergy}";
+        energyText.text = $"{target.currentEnergy}/{target.maxEnergy}";
         HPText.text = $"{target.currentHP}/{target.maxHP}";
 
         float healthPercent = (float)target.currentHP / target.maxHP;
         healthBarFill.fillAmount = healthPercent;
+
+        float energyPercent = (float)target.currentEnergy / target.maxEnergy;
+        energyBarFill.fillAmount = energyPercent;
+
+
     }
 }

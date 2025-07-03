@@ -7,6 +7,16 @@ public class UIActionPanel : MonoBehaviour
 {
     public static UIActionPanel Instance;
 
+
+    [Header("Current Player Info")]
+    public GameObject currentPlayerInfoPanel;
+    public Image currentPlayerIcon;
+    public Image hpFillImage;
+    public Image energyFillImage;
+
+    public TMP_Text hpText;
+    public TMP_Text energyText;
+
     [Header("Turn UI")]
     public GameObject playerActionHUD;
     public Button endTurnButton;
@@ -120,6 +130,13 @@ public class UIActionPanel : MonoBehaviour
     {
         actionButton1.GetComponentInChildren<TMPro.TMP_Text>().text = character.basicAttack != null ? character.basicAttack.abilityName : "Atacar";
 
+        Image iconImage = actionButton1.GetComponentInChildren<Image>();
+        if (iconImage != null && character.basicAttack.icon != null)
+        {
+            iconImage.sprite = character.basicAttack.icon;
+            iconImage.enabled = true;
+        }
+
         for (int i = 0; i < character.abilities.Length; i++)
         {
             var button = i switch
@@ -146,6 +163,31 @@ public class UIActionPanel : MonoBehaviour
         actionButton3.interactable = true;
         actionButton4.interactable = true;
 
+    }
+
+    public void ShowCurrentPlayerInfo(PlayerCharacter player)
+    {
+        currentPlayerInfoPanel.SetActive(true);
+
+        currentPlayerIcon.sprite = player.icon;
+
+        if (hpFillImage != null)
+            hpFillImage.fillAmount = (float)player.currentHP / player.maxHP;
+
+        if (energyFillImage != null)
+            energyFillImage.fillAmount = (float)player.currentEnergy / player.maxEnergy;
+
+        if (hpText != null)
+            hpText.text = $"{player.currentHP}/{player.maxHP}";
+
+        if (energyText != null)
+            energyText.text = $"{player.currentEnergy}/{player.maxEnergy}";
+    }
+
+
+    public void HideCurrentPlayerInfo()
+    {
+        currentPlayerInfoPanel.SetActive(false);
     }
 
     public void HidePlayerActionHUD()

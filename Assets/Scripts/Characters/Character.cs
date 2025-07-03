@@ -41,6 +41,8 @@ public abstract class Character : MonoBehaviour, ISelectable
     private Color originalColor;
     private bool isSelected = false;
     private bool isHovered = false;
+    
+    public Sprite icon; 
 
     private void Awake()
     {
@@ -72,6 +74,7 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public virtual IEnumerator OnTurnEnd()
     {
+        UIActionPanel.Instance.HideCurrentPlayerInfo();
         yield return null;
     }
 

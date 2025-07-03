@@ -37,6 +37,7 @@ public class RoundManager : MonoBehaviour
             while (currentCharacterIndex < turnOrder.Count)
             {
                 Character currentCharacter = turnOrder[currentCharacterIndex];
+
                 TurnManager.StartTurn(currentCharacter);
                 yield return new WaitUntil(() => TurnManager.TurnFinished);
 
@@ -54,7 +55,6 @@ public class RoundManager : MonoBehaviour
         Character[] allCharacters = FindObjectsOfType<Character>();
         turnOrder = new List<Character>(allCharacters);
 
-            
         foreach (var character in turnOrder)
         {
             character.initiativeRoll = Random.Range(1, 11); // 1 a 10
@@ -69,7 +69,7 @@ public class RoundManager : MonoBehaviour
 
         currentCharacterIndex = 0;
 
-        UIManager.Instance.UpdateTurnOrder(turnOrder);
+        UIManager.Instance.UpdateTurnHUDs(turnOrder); 
 
         yield return new WaitForSeconds(0.5f);
     }
