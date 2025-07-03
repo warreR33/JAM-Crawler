@@ -32,7 +32,7 @@ public class TurnHUD : MonoBehaviour
     {
         StopAllCoroutines();
         Vector3 direction = (transform.localPosition).normalized;
-        Vector3 offset = direction * 40f; 
+        Vector3 offset = direction * 40f;
         StartCoroutine(MoveToPosition(originalPosition + offset));
     }
 

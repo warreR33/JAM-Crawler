@@ -64,7 +64,6 @@ public class PlayerCharacter : Character
     {
 
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
-        Debug.Log($"{characterName} gana {amount} de energía. Actual: {currentEnergy}/{maxEnergy}");
         OnEnergyChanged?.Invoke(currentEnergy, maxEnergy);
         UIActionPanel.Instance.ShowCurrentPlayerInfo(this);
     }

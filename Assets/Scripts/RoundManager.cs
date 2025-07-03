@@ -69,7 +69,11 @@ public class RoundManager : MonoBehaviour
 
         currentCharacterIndex = 0;
 
-        UIManager.Instance.UpdateTurnHUDs(turnOrder); 
+        if (UIManager.Instance != null)
+        {
+            yield return UIManager.Instance.AnimateResetAndRebuild(turnOrder);
+                UIManager.Instance.HighlightCurrentTurn(0);
+        }
 
         yield return new WaitForSeconds(0.5f);
     }
@@ -77,6 +81,7 @@ public class RoundManager : MonoBehaviour
     private IEnumerator OnRoundEnd()
     {
         Debug.Log("Fin de la Ronda");
+
         yield return new WaitForSeconds(0.5f);
     }
 }

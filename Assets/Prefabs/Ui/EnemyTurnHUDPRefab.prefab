@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 1525536764613617606}
   - component: {fileID: 2206761026010623593}
   m_Layer: 5
-  m_Name: 'EnemyTurnHUDPRefab '
+  m_Name: EnemyTurnHUDPRefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -337,3 +337,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconImage: {fileID: 2238471152334749607}
   speedText: {fileID: 6590654685857088928}
+  highlightOffset: -15
+  moveSpeed: 3

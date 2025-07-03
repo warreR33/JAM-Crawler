@@ -128,6 +128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iconImage: {fileID: 126154568751959512}
   speedText: {fileID: 3095052639420683135}
+  highlightOffset: -15
+  moveSpeed: 3
 --- !u!1 &6258798073425556846
 GameObject:
   m_ObjectHideFlags: 0

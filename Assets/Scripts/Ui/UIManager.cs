@@ -23,8 +23,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float radius = 150f;
     [SerializeField] private float totalAngle = 360f;
 
-    private List<TurnHUD> currentTurnHUDs = new();
+    public bool isAnimatingReset = false;
+    public bool IsAnimatingReset => isAnimatingReset;
 
+    private List<TurnHUD> currentTurnHUDs = new();
     public IReadOnlyList<TurnHUD> CurrentTurnHUDs => currentTurnHUDs;
 
     private void Awake()
@@ -55,14 +57,15 @@ public class UIManager : MonoBehaviour
 
             if (hud != null)
             {
-                hud.SetData(characters[i].icon, characters[i].speed + characters[i].initiativeRoll);
+                var character = characters[i];
+                hud.SetData(character.icon, character.speed + character.initiativeRoll);
                 currentTurnHUDs.Add(hud);
 
                 float angle = (startAngle + angleStep * i) * Mathf.Deg2Rad;
                 Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
 
                 hud.transform.localPosition = pos;
-                hud.transform.localRotation = Quaternion.identity;
+                hud.transform.rotation = Quaternion.identity;
                 hud.SetOriginalPosition(pos);
             }
         }
@@ -70,7 +73,11 @@ public class UIManager : MonoBehaviour
 
     public void HighlightCurrentTurn(int index)
     {
+        if (isAnimatingReset)
+            return;
+
         currentHighlightedIndex = index;
+
         RotateCircleToHighlight(index);
     }
 
@@ -84,7 +91,6 @@ public class UIManager : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(RotateContainerCoroutine(targetAngle, radius));
-
     }
 
     private IEnumerator RotateContainerCoroutine(float targetAngle, float radius)
@@ -95,27 +101,22 @@ public class UIManager : MonoBehaviour
         float startAngle = turnHUDContainer.localEulerAngles.z;
         if (startAngle > 180) startAngle -= 360;
 
-        // Diferencia angular mínima entre start y target
         float angleDifference = Mathf.DeltaAngle(startAngle, targetAngle);
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-
-            // Interpolamos sumando la diferencia proporcional
             float angle = startAngle + angleDifference * t;
 
             turnHUDContainer.localEulerAngles = new Vector3(0, 0, angle);
 
-            // Invertimos rotación de los iconos para que no roten con el container
             foreach (var hud in currentTurnHUDs)
                 hud.transform.localRotation = Quaternion.Euler(0, 0, -angle);
 
             yield return null;
         }
 
-        // Al final aseguramos posición final exacta
         turnHUDContainer.localEulerAngles = new Vector3(0, 0, targetAngle);
 
         foreach (var hud in currentTurnHUDs)
@@ -130,4 +131,117 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 🔁 Animación general que se llama desde RoundManager
+    public IEnumerator AnimateResetAndRebuild(List<Character> characters)
+    {
+        isAnimatingReset = true;
+
+        yield return MoveIconsToCenter();
+        yield return RebuildHUDs(characters);
+        yield return AnimateIconsToCircle();
+
+        isAnimatingReset = false;
+    }
+
+    // Etapa 1: mover íconos al centro
+    private IEnumerator MoveIconsToCenter(float duration = 0.5f)
+    {
+        if (currentTurnHUDs.Count == 0)
+            yield break;
+
+        float elapsed = 0f;
+        List<Vector3> startPositions = new();
+
+        foreach (var hud in currentTurnHUDs)
+            startPositions.Add(hud.transform.localPosition);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            for (int i = 0; i < currentTurnHUDs.Count; i++)
+            {
+                if (currentTurnHUDs[i] != null)
+                {
+                    currentTurnHUDs[i].transform.localPosition = Vector3.Lerp(startPositions[i], Vector3.zero, t);
+                    currentTurnHUDs[i].transform.rotation = Quaternion.identity;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    // Etapa 2: destruir e instanciar íconos con el nuevo orden
+    private IEnumerator RebuildHUDs(List<Character> characters)
+    {
+        foreach (Transform child in turnHUDContainer)
+            Destroy(child.gameObject);
+
+        currentTurnHUDs.Clear();
+
+        yield return null; // Esperamos un frame
+
+        // Instanciamos, pero se acomodan con UpdateTurnHUDs
+        // más tarde los moveremos desde el centro
+        UpdateTurnHUDs(characters);
+
+        // Dejamos los íconos en el centro para animarlos luego
+        foreach (var hud in currentTurnHUDs)
+        {
+            if (hud != null)
+            {
+                hud.transform.localPosition = Vector3.zero;
+                hud.transform.rotation = Quaternion.identity;
+            }
+        }
+    }
+
+    // Etapa 3: animación desde el centro al círculo
+    private IEnumerator AnimateIconsToCircle(float duration = 0.5f)
+    {
+        float elapsed = 0f;
+        int count = currentTurnHUDs.Count;
+        float angleStep = totalAngle / count;
+        float startAngle = (360f - totalAngle) / 2f;
+
+        List<Vector3> finalPositions = new();
+
+        for (int i = 0; i < count; i++)
+        {
+            float angle = (startAngle + angleStep * i) * Mathf.Deg2Rad;
+            Vector3 pos = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+            finalPositions.Add(pos);
+        }
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            for (int i = 0; i < count; i++)
+            {
+                var hud = currentTurnHUDs[i];
+                if (hud != null)
+                {
+                    hud.transform.localPosition = Vector3.Lerp(Vector3.zero, finalPositions[i], t);
+                    hud.transform.rotation = Quaternion.identity;
+                }
+            }
+
+            yield return null;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            var hud = currentTurnHUDs[i];
+            if (hud != null)
+            {
+                hud.transform.localPosition = finalPositions[i];
+                hud.transform.rotation = Quaternion.identity;
+                hud.SetOriginalPosition(finalPositions[i]);
+            }
+        }
+    }
 }
