@@ -114,6 +114,7 @@ MonoBehaviour:
   basicAttack: {fileID: 11400000, guid: 85db80dff5a564542bdf5c04ecb75838, type: 2}
   abilities:
   - {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
+  - {fileID: 11400000, guid: 81eeefbf7fe58514aaa3d5c3cd58e4b5, type: 2}
   smallHudObject: {fileID: 0}
 --- !u!61 &9058049528107548474
 BoxCollider2D:
