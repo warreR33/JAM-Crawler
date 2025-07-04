@@ -45,9 +45,24 @@ public class PlayerCharacter : Character
         UIActionPanel.Instance.ClearCallbacks();
     }
 
+    public IEnumerator UseAbility(AbilitySO ability, Character target)
+    {
+        if (ability == null || target == null) yield break;
+
+        yield return StartCoroutine(CombatVisualFeedbackManager.Instance.PlayAbilityStartFX(ability.abilityName));
+        yield return StartCoroutine(ability.ActivateRoutine(this, target));
+        yield return StartCoroutine(CombatVisualFeedbackManager.Instance.EndAbilityFX());
+
+        SpendEnergy(ability.energyCost);
+        OnPlayerActionCompleted?.Invoke();
+    }
+
+
+
+
+
     public void GainEnergy(int amount)
     {
-
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
         OnEnergyChanged?.Invoke(currentEnergy, maxEnergy);
         UIActionPanel.Instance.ShowCurrentPlayerInfo(this);
@@ -64,4 +79,6 @@ public class PlayerCharacter : Character
         Debug.Log($"{characterName} no tiene suficiente energía ({currentEnergy}/{amount})");
         return false;
     }
+
+
 }

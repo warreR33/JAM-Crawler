@@ -8,11 +8,12 @@ public abstract class AbilitySO : ScriptableObject
     public Sprite icon;
     public int energyCost;
 
-    public GameObject visualEffectPrefab;
+    public GameObject startEffectPrefab;   
+    public GameObject impactEffectPrefab;
 
 
-    public virtual void Activate(Character user, Character target)
+    public virtual IEnumerator ActivateRoutine(Character user, Character target)
     {
-        Debug.Log($"{user.characterName} usa {abilityName} en {target.characterName}");
+        yield break; 
     }
 }

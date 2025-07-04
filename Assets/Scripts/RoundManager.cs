@@ -57,7 +57,7 @@ public class RoundManager : MonoBehaviour
 
         foreach (var character in turnOrder)
         {
-            character.initiativeRoll = Random.Range(1, 11); // 1 a 10
+            character.initiativeRoll = Random.Range(1, 5); 
         }
 
         turnOrder.Sort((a, b) =>

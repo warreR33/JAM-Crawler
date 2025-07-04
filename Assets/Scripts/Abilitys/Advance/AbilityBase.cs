@@ -7,13 +7,28 @@ public class AbilityBase : AbilitySO
 {
     public List<AbilityActionSO> actions;
 
-        public override void Activate(Character user, Character target)
-        {
-            Debug.Log($"{user.characterName} usa {abilityName} en {target.characterName}");
+    public override IEnumerator ActivateRoutine(Character user, Character target)
+    {
+        yield return CombatVisualFeedbackManager.Instance.PlayAbilityStartFX(abilityName);
 
-            foreach (var action in actions)
-            {
-                action.Execute(user, target);
-            }
+        if (startEffectPrefab != null)
+        {
+            GameObject.Instantiate(startEffectPrefab, user.transform.position, Quaternion.identity);
+            yield return new WaitForSeconds(0.3f); 
         }
+
+        foreach (var action in actions)
+        {
+            action.Execute(user, target, this);
+
+            if (impactEffectPrefab != null)
+            {
+                GameObject.Instantiate(impactEffectPrefab, target.transform.position, Quaternion.identity);
+            }
+
+            yield return new WaitForSeconds(0.2f);
+        }
+        
+        yield return CombatVisualFeedbackManager.Instance.EndAbilityFX();
+    }
 }

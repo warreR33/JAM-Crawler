@@ -18,7 +18,7 @@ public class UIActionPanel : MonoBehaviour
     [Header("Turn UI")]
     public GameObject playerActionHUD;
     public Button endTurnButton;
-    public Button actionButton1; // Basic attack
+    public Button actionButton1; 
     public Button actionButton2;
     public Button actionButton3;
     public Button actionButton4;
@@ -39,28 +39,26 @@ public class UIActionPanel : MonoBehaviour
 
         endTurnButton.onClick.AddListener(OnEndTurnPressed);
 
+        // Basic Attack (botón 1)
         actionButton1.onClick.AddListener(() =>
         {
             if (PlayerCharacter.Current == null || PlayerCharacter.Current.basicAttack == null)
                 return;
 
-            SetAbilityCallback((Character target) =>
+            AbilitySO basic = PlayerCharacter.Current.basicAttack;
+
+            if (PlayerCharacter.Current.currentEnergy >= basic.energyCost)
             {
-                AbilitySO basic = PlayerCharacter.Current.basicAttack;
-
-                if (PlayerCharacter.Current.currentEnergy >= basic.energyCost)
+                SetAbilityCallback((Character target) =>
                 {
-                    basic.Activate(PlayerCharacter.Current, target);
-                    PlayerCharacter.Current.SpendEnergy(basic.energyCost);
-                    PlayerCharacter.Current.OnPlayerActionCompleted?.Invoke();
-                }
-                else
-                {
-                    Debug.Log($"{PlayerCharacter.Current.characterName} no tiene energía suficiente para usar el ataque básico.");
-                }
-
-                actionButton1.interactable = false;
-            });
+                    StartCoroutine(PlayerCharacter.Current.UseAbility(basic, target));
+                    actionButton1.interactable = false;
+                });
+            }
+            else
+            {
+                Debug.Log($"{PlayerCharacter.Current.characterName} no tiene energía suficiente para usar el ataque básico.");
+            }
         });
     }
 
@@ -81,6 +79,13 @@ public class UIActionPanel : MonoBehaviour
                 if (textComponent != null)
                     textComponent.text = ability.abilityName;
 
+                Image iconImage = btn.GetComponent<Image>();
+                if (iconImage != null && ability.icon != null)
+                {
+                    iconImage.sprite = ability.icon;
+                    iconImage.enabled = true;
+                }
+
                 btn.onClick.RemoveAllListeners();
 
                 bool hasEnergy = player.currentEnergy >= ability.energyCost;
@@ -92,9 +97,7 @@ public class UIActionPanel : MonoBehaviour
                     {
                         SetAbilityCallback((Character target) =>
                         {
-                            ability.Activate(player, target);
-                            player.SpendEnergy(ability.energyCost);
-                            player.OnPlayerActionCompleted?.Invoke();
+                            StartCoroutine(player.UseAbility(ability, target));
                         });
 
                         SelectionManager.Instance.ClearSelection();
@@ -178,7 +181,6 @@ public class UIActionPanel : MonoBehaviour
     {
         playerActionHUD.SetActive(true);
 
-        // Suscribimos para actualizar botones al cambiar energía
         character.OnEnergyChanged += RefreshAbilityButtons;
 
         SetupAbilities(character);
