@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bdc760e29bba04469204366e00fe718, type: 3}
   m_Name: Smite
   m_EditorClassIdentifier: 
-  abilityName: 
-  icon: {fileID: 0}
-  energyCost: 0
+  abilityName: Smite
+  icon: {fileID: 21300000, guid: 356b0513bb7bc6d40a9792a341c64c95, type: 3}
+  energyCost: 5
   startEffectPrefab: {fileID: 0}
   impactEffectPrefab: {fileID: 0}
-  actions: []
+  actions:
+  - {fileID: 11400000, guid: ba2354d8e48afe14992db9ff2699db73, type: 2}
+  - {fileID: 11400000, guid: 228d08f8bef6b0345b6715a9d4c3c3f6, type: 2}

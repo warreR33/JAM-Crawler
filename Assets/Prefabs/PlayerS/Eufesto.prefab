@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 8d5885ec60551104b82b8ec659b4d9aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -110,11 +110,13 @@ MonoBehaviour:
   defense: 10
   critChance: 0.1
   critMultiplier: 1.5
+  icon: {fileID: 21300000, guid: 99e549f2cad768c4295389c8fd86cdc9, type: 3}
   basicAttack: {fileID: 11400000, guid: 85db80dff5a564542bdf5c04ecb75838, type: 2}
   abilities:
+  - {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
+  smallHudObject: {fileID: 0}
 --- !u!61 &6988599991469418418
 BoxCollider2D:
   m_ObjectHideFlags: 0

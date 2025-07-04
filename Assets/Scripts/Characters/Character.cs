@@ -41,6 +41,8 @@ public abstract class Character : MonoBehaviour, ISelectable
     private Color originalColor;
     private bool isSelected = false;
     private bool isHovered = false;
+
+    private List<Debuff> activeDebuffs = new List<Debuff>();
     
     public Sprite icon; 
 
@@ -50,7 +52,7 @@ public abstract class Character : MonoBehaviour, ISelectable
         originalColor = spriteRenderer.color;
     }
 
-    public void TakeDamage(int amount)
+    public virtual void TakeDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - amount);
         Debug.Log($"{characterName} recibe {amount} de daño. HP restante: {currentHP}");
@@ -62,8 +64,15 @@ public abstract class Character : MonoBehaviour, ISelectable
         Debug.Log($"{characterName} recupera {amount} de vida. HP actual: {currentHP}");
     }
 
+    public void AddDebuff(DebuffType type, int duration)
+    {
+        Debuff newDebuff = new Debuff(type, duration, this);
+        activeDebuffs.Add(newDebuff);
+    }
+
     public virtual IEnumerator OnTurnStart()
     {
+        ApplyDebuffsAtTurnStart();
         yield return null;
     }
 
@@ -76,6 +85,27 @@ public abstract class Character : MonoBehaviour, ISelectable
     {
         UIActionPanel.Instance.HideCurrentPlayerInfo();
         yield return null;
+    }
+
+    public void ApplyDebuffsAtTurnStart()
+    {
+        List<Debuff> expired = new List<Debuff>();
+
+        foreach (Debuff debuff in activeDebuffs)
+        {
+            debuff.ApplyTurnEffect();
+
+            if (debuff.IsExpired())
+            {
+                expired.Add(debuff);
+            }
+        }
+
+        foreach (Debuff debuff in expired)
+        {
+            debuff.CleanUp();
+            activeDebuffs.Remove(debuff);
+        }
     }
 
     private void OnMouseEnter()

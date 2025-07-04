@@ -7,15 +7,14 @@ public class PlayerCharacter : Character
     public AbilitySO basicAttack;
     public AbilitySO[] abilities = new AbilitySO[3];
 
-    public static PlayerCharacter Current;
 
     public GameObject smallHudObject;
 
     public System.Action<int, int> OnEnergyChanged;
 
+
     public override IEnumerator OnTurnStart()
     {
-        Current = this;
 
         if (smallHudObject != null)
             smallHudObject.SetActive(false);

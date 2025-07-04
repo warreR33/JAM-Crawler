@@ -15,7 +15,7 @@ MonoBehaviour:
   abilityName: Salto del lince
   icon: {fileID: 21300000, guid: 76b807f718df58548b69e7089a479f02, type: 3}
   energyCost: 2
-  visualEffectPrefab: {fileID: 5191405745487512432, guid: 9d20d62e6a49e2f4a86b003a16d98130, type: 3}
+  startEffectPrefab: {fileID: 7627099760626138996, guid: 46f796d4ea70f074987700cacf6e8804, type: 3}
+  impactEffectPrefab: {fileID: 5191405745487512432, guid: 9d20d62e6a49e2f4a86b003a16d98130, type: 3}
   actions:
-  - {fileID: 11400000, guid: f8c78b586c6f3114081d6f8a8c701d8c, type: 2}
-  - {fileID: 11400000, guid: 12576166c3859984b98afa104b4f9603, type: 2}
+  - {fileID: 11400000, guid: 37872784c3a240b499464ea9937a0c7b, type: 2}

@@ -42,22 +42,22 @@ public class UIActionPanel : MonoBehaviour
         // Basic Attack (botón 1)
         actionButton1.onClick.AddListener(() =>
         {
-            if (PlayerCharacter.Current == null || PlayerCharacter.Current.basicAttack == null)
+            if (currentPlayer == null || currentPlayer.basicAttack == null)
                 return;
 
-            AbilitySO basic = PlayerCharacter.Current.basicAttack;
+            AbilitySO basic = currentPlayer.basicAttack;
 
-            if (PlayerCharacter.Current.currentEnergy >= basic.energyCost)
+            if (currentPlayer.currentEnergy >= basic.energyCost)
             {
                 SetAbilityCallback((Character target) =>
                 {
-                    StartCoroutine(PlayerCharacter.Current.UseAbility(basic, target));
+                    StartCoroutine(currentPlayer.UseAbility(basic, target));
                     actionButton1.interactable = false;
                 });
             }
             else
             {
-                Debug.Log($"{PlayerCharacter.Current.characterName} no tiene energía suficiente para usar el ataque básico.");
+                Debug.Log($"{currentPlayer.characterName} no tiene energía suficiente para usar el ataque básico.");
             }
         });
     }

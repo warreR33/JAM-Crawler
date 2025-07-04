@@ -26,6 +26,8 @@ public class RoundManager : MonoBehaviour
 
     private IEnumerator StartRoundLoop()
     {
+        
+
         while (true)
         {
             Debug.Log($"--- Comienza la Ronda {roundCount} ---");
