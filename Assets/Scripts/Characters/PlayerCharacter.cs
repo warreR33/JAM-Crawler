@@ -17,7 +17,6 @@ public class PlayerCharacter : Character
     {
         Current = this;
 
-        // Ocultamos HUD pequeño y mostramos el grande
         if (smallHudObject != null)
             smallHudObject.SetActive(false);
 
@@ -37,7 +36,6 @@ public class PlayerCharacter : Character
         while (waiting)
             yield return null;
 
-        // Al terminar la acción, ocultamos el HUD grande y volvemos a mostrar el pequeño
         UIActionPanel.Instance.HidePlayerActionHUD();
         UIActionPanel.Instance.HideCurrentPlayerInfo();
 
@@ -45,19 +43,6 @@ public class PlayerCharacter : Character
             smallHudObject.SetActive(true);
 
         UIActionPanel.Instance.ClearCallbacks();
-    }
-
-    public void PerformBasicAttack(Character target)
-    {
-        if (basicAttack.visualEffectPrefab != null)
-        {
-            GameObject fx = Instantiate(basicAttack.visualEffectPrefab, target.transform.position, Quaternion.identity); 
-        }
-
-        float rawDamage = power * 1.2f;
-        float finalDamage = Mathf.Max(0, rawDamage - target.defense);
-        target.TakeDamage(Mathf.RoundToInt(finalDamage));
-        Debug.Log($"{characterName} ataca a {target.characterName} causando {finalDamage} de daño");
     }
 
     public void GainEnergy(int amount)

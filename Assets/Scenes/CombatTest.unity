@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 44911478}
   - component: {fileID: 44911479}
   m_Layer: 5
-  m_Name: TurnUI
+  m_Name: \-TurnUI-/
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,17 +146,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44911477}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2047064629}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 484.5, y: 270}
+  m_SizeDelta: {x: 960, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &44911479
 MonoBehaviour:
@@ -176,8 +176,9 @@ MonoBehaviour:
   enemyTurnHUDPrefab: {fileID: 7162399229843400708, guid: e4af374c450c2b647bc84ffa0eca73c8, type: 3}
   turnCircleParent: {fileID: 304481897}
   rotationSpeed: 300
-  radius: 150
+  radius: 120
   totalAngle: 360
+  isAnimatingReset: 0
 --- !u!1 &65980418
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +242,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.3132075, g: 0.3090708, b: 0.3090708, a: 1}
-    m_SelectedColor: {r: 1, g: 0, b: 0, a: 1}
+    m_SelectedColor: {r: 0.7132075, g: 0.41312206, b: 0.41312206, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -447,12 +448,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2047064629}
+  m_Father: {fileID: 1793538727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &338603680
 GameObject:
@@ -1862,7 +1863,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.3132075, g: 0.3090708, b: 0.3090708, a: 1}
-    m_SelectedColor: {r: 1, g: 0, b: 0, a: 1}
+    m_SelectedColor: {r: 0.7132075, g: 0.41312206, b: 0.41312206, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -2946,14 +2947,15 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 304481897}
   m_Father: {fileID: 2047064629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!1 &1794672102
 GameObject:
   m_ObjectHideFlags: 0
@@ -3068,7 +3070,7 @@ GameObject:
   - component: {fileID: 1949841658}
   - component: {fileID: 1949841659}
   m_Layer: 5
-  m_Name: ActionBar
+  m_Name: \-ActionBar-/
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3083,14 +3085,14 @@ RectTransform:
   m_GameObject: {fileID: 1949841657}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2047064629}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -178.9, y: -29.3}
+  m_AnchoredPosition: {x: 166, y: 361}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1949841659
@@ -3436,12 +3438,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1949841658}
   - {fileID: 1364915045}
   - {fileID: 284150753}
-  - {fileID: 304481897}
   - {fileID: 1793538727}
-  - {fileID: 44911478}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3589,7 +3588,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.3132075, g: 0.3090708, b: 0.3090708, a: 1}
-    m_SelectedColor: {r: 1, g: 0, b: 0, a: 1}
+    m_SelectedColor: {r: 0.7132075, g: 0.41312206, b: 0.41312206, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -3667,6 +3666,10 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 21300000, guid: 99e549f2cad768c4295389c8fd86cdc9, type: 3}
+    - target: {fileID: 2332284067097726201, guid: 47a5d1e380139184b8610c205cd27c8e, type: 3}
+      propertyPath: abilities.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
     - target: {fileID: 7883033894382381720, guid: 47a5d1e380139184b8610c205cd27c8e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.649908
@@ -3724,6 +3727,10 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 21300000, guid: 87c8d39214cf23140b77a9f8baec5584, type: 3}
+    - target: {fileID: 5230938098309577038, guid: 9508378317977f4459eaf637616baa72, type: 3}
+      propertyPath: abilities.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
     - target: {fileID: 5365754161360199396, guid: 9508378317977f4459eaf637616baa72, type: 3}
       propertyPath: m_Name
       value: Jorge
@@ -3793,6 +3800,14 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 21300000, guid: fee4f58541c0b7f4399f9fe7cf9de4d5, type: 3}
+    - target: {fileID: 1425693934746324605, guid: 4342b03d3b47b904bba9715a306c1648, type: 3}
+      propertyPath: abilities.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
+    - target: {fileID: 1425693934746324605, guid: 4342b03d3b47b904bba9715a306c1648, type: 3}
+      propertyPath: abilities.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 81eeefbf7fe58514aaa3d5c3cd58e4b5, type: 2}
     - target: {fileID: 3591640451386380946, guid: 4342b03d3b47b904bba9715a306c1648, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.1006756
@@ -3850,6 +3865,8 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 1805244149}
   - {fileID: 1794672104}
+  - {fileID: 1949841658}
+  - {fileID: 44911478}
   - {fileID: 2047064629}
   - {fileID: 8903534489614178925}
   - {fileID: 5153518338451097914}

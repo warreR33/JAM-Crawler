@@ -7,29 +7,25 @@ public class UIActionPanel : MonoBehaviour
 {
     public static UIActionPanel Instance;
 
-
     [Header("Current Player Info")]
     public GameObject currentPlayerInfoPanel;
     public Image currentPlayerIcon;
     public Image hpFillImage;
     public Image energyFillImage;
-
     public TMP_Text hpText;
     public TMP_Text energyText;
 
     [Header("Turn UI")]
     public GameObject playerActionHUD;
     public Button endTurnButton;
-    public Button actionButton1;
+    public Button actionButton1; // Basic attack
     public Button actionButton2;
     public Button actionButton3;
     public Button actionButton4;
 
     private System.Action onEndTurn;
-
     private System.Action<Character> onTargetSelected;
     public bool isTargeting = false;
-
     public bool IsTargeting => isTargeting;
 
     private PlayerCharacter currentPlayer;
@@ -45,13 +41,22 @@ public class UIActionPanel : MonoBehaviour
 
         actionButton1.onClick.AddListener(() =>
         {
+            if (PlayerCharacter.Current == null || PlayerCharacter.Current.basicAttack == null)
+                return;
+
             SetAbilityCallback((Character target) =>
             {
-                Debug.Log("Ejecutar habilidad básica contra " + target.characterName);
+                AbilitySO basic = PlayerCharacter.Current.basicAttack;
 
-                if (PlayerCharacter.Current != null)
+                if (PlayerCharacter.Current.currentEnergy >= basic.energyCost)
                 {
-                    PlayerCharacter.Current.PerformBasicAttack(target);
+                    basic.Activate(PlayerCharacter.Current, target);
+                    PlayerCharacter.Current.SpendEnergy(basic.energyCost);
+                    PlayerCharacter.Current.OnPlayerActionCompleted?.Invoke();
+                }
+                else
+                {
+                    Debug.Log($"{PlayerCharacter.Current.characterName} no tiene energía suficiente para usar el ataque básico.");
                 }
 
                 actionButton1.interactable = false;
@@ -59,44 +64,62 @@ public class UIActionPanel : MonoBehaviour
         });
     }
 
-
     private void SetupAbilityButtons(PlayerCharacter player)
     {
-        var buttons = new Button[] { actionButton1, actionButton2, actionButton3, actionButton4 };
+        currentPlayer = player;
+        var buttons = new Button[] { actionButton2, actionButton3, actionButton4 };
 
         for (int i = 0; i < buttons.Length; i++)
         {
-            if (i < player.abilities.Length)
+            Button btn = buttons[i];
+            if (i < player.abilities.Length && player.abilities[i] != null)
             {
                 AbilitySO ability = player.abilities[i];
-                Button btn = buttons[i];
                 btn.gameObject.SetActive(true);
 
-                TextMeshProUGUI textComponent = btn.GetComponentInChildren<TextMeshProUGUI>();
+                var textComponent = btn.GetComponentInChildren<TextMeshProUGUI>();
                 if (textComponent != null)
-                {
                     textComponent.text = ability.abilityName;
-                }
 
-                int index = i;
                 btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() =>
-                {
-                    SetAbilityCallback((Character target) =>
-                    {
-                        ability.Activate(player, target);
-                        player.SpendEnergy(ability.energyCost);
-                        player.OnPlayerActionCompleted?.Invoke();
-                    });
 
-                    // Borra la selección previa
-                    SelectionManager.Instance.ClearSelection();
-                });
+                bool hasEnergy = player.currentEnergy >= ability.energyCost;
+                btn.interactable = hasEnergy;
+
+                if (hasEnergy)
+                {
+                    btn.onClick.AddListener(() =>
+                    {
+                        SetAbilityCallback((Character target) =>
+                        {
+                            ability.Activate(player, target);
+                            player.SpendEnergy(ability.energyCost);
+                            player.OnPlayerActionCompleted?.Invoke();
+                        });
+
+                        SelectionManager.Instance.ClearSelection();
+                    });
+                }
+                else
+                {
+                    btn.onClick.AddListener(() =>
+                    {
+                        Debug.Log($"{player.characterName} no tiene energía suficiente para usar {ability.abilityName}.");
+                    });
+                }
             }
             else
             {
-                buttons[i].gameObject.SetActive(false);
+                btn.gameObject.SetActive(false);
             }
+        }
+    }
+
+    private void RefreshAbilityButtons(int current, int max)
+    {
+        if (currentPlayer != null)
+        {
+            SetupAbilityButtons(currentPlayer);
         }
     }
 
@@ -119,16 +142,15 @@ public class UIActionPanel : MonoBehaviour
         onTargetSelected.Invoke(target);
         onTargetSelected = null;
 
-            if (target is ISelectable selectableTarget)
-        selectableTarget.OnDeselected();
-
+        if (target is ISelectable selectableTarget)
+            selectableTarget.OnDeselected();
 
         SelectionManager.Instance.ClearSelection();
     }
 
     public void SetupAbilities(PlayerCharacter character)
     {
-        actionButton1.GetComponentInChildren<TMPro.TMP_Text>().text = character.basicAttack != null ? character.basicAttack.abilityName : "Atacar";
+        actionButton1.GetComponentInChildren<TMP_Text>().text = character.basicAttack != null ? character.basicAttack.abilityName : "Atacar";
 
         Image iconImage = actionButton1.GetComponentInChildren<Image>();
         if (iconImage != null && character.basicAttack.icon != null)
@@ -137,19 +159,17 @@ public class UIActionPanel : MonoBehaviour
             iconImage.enabled = true;
         }
 
-        for (int i = 0; i < character.abilities.Length; i++)
-        {
-            var button = i switch
-            {
-                0 => actionButton2,
-                1 => actionButton3,
-                2 => actionButton4,
-                _ => null
-            };
+        var abilityTexts = new TMP_Text[] {
+            actionButton2.GetComponentInChildren<TMP_Text>(),
+            actionButton3.GetComponentInChildren<TMP_Text>(),
+            actionButton4.GetComponentInChildren<TMP_Text>()
+        };
 
-            if (button != null && character.abilities[i] != null)
+        for (int i = 0; i < character.abilities.Length && i < abilityTexts.Length; i++)
+        {
+            if (character.abilities[i] != null)
             {
-                button.GetComponentInChildren<TMPro.TMP_Text>().text = character.abilities[i].abilityName;
+                abilityTexts[i].text = character.abilities[i].abilityName;
             }
         }
     }
@@ -157,17 +177,19 @@ public class UIActionPanel : MonoBehaviour
     public void ShowPlayerActionHUD(PlayerCharacter character)
     {
         playerActionHUD.SetActive(true);
-        SetupAbilities(character);
-        actionButton1.interactable = true;
-        actionButton2.interactable = true;
-        actionButton3.interactable = true;
-        actionButton4.interactable = true;
 
+        // Suscribimos para actualizar botones al cambiar energía
+        character.OnEnergyChanged += RefreshAbilityButtons;
+
+        SetupAbilities(character);
+        SetupAbilityButtons(character);
+        actionButton1.interactable = true;
     }
 
     public void ShowCurrentPlayerInfo(PlayerCharacter player)
     {
         currentPlayerInfoPanel.SetActive(true);
+        currentPlayer = player;
 
         currentPlayerIcon.sprite = player.icon;
 
@@ -183,7 +205,6 @@ public class UIActionPanel : MonoBehaviour
         if (energyText != null)
             energyText.text = $"{player.currentEnergy}/{player.maxEnergy}";
     }
-
 
     public void HideCurrentPlayerInfo()
     {
@@ -205,14 +226,18 @@ public class UIActionPanel : MonoBehaviour
         onEndTurn = null;
         onTargetSelected = null;
         isTargeting = false;
+
+        if (currentPlayer != null)
+        {
+            currentPlayer.OnEnergyChanged -= RefreshAbilityButtons;
+            currentPlayer = null;
+        }
     }
 
     private void OnEndTurnPressed()
     {
         onEndTurn?.Invoke();
     }
-
-    // === Turn Info ===
 
     public void SetCurrentTurn(Character current)
     {

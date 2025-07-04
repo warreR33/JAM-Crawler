@@ -14,6 +14,5 @@ public abstract class AbilitySO : ScriptableObject
     public virtual void Activate(Character user, Character target)
     {
         Debug.Log($"{user.characterName} usa {abilityName} en {target.characterName}");
-        // Lógica concreta en subclases
     }
 }
