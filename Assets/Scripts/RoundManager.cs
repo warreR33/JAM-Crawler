@@ -71,10 +71,10 @@ public class RoundManager : MonoBehaviour
 
         currentCharacterIndex = 0;
 
-        if (UIManager.Instance != null)
+        if (TurnUIManager.Instance != null)
         {
-            yield return UIManager.Instance.AnimateResetAndRebuild(turnOrder);
-                UIManager.Instance.HighlightCurrentTurn(0);
+            yield return TurnUIManager.Instance.AnimateResetAndRebuild(turnOrder);
+                TurnUIManager.Instance.HighlightCurrentTurn(0);
         }
 
         yield return new WaitForSeconds(0.5f);

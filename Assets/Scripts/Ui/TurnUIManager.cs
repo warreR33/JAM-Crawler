@@ -4,9 +4,9 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 
-public class UIManager : MonoBehaviour
+public class TurnUIManager : MonoBehaviour
 {
-    public static UIManager Instance;
+    public static TurnUIManager Instance;
 
     [Header("Turn Order Icons HUD")]
     public GameObject turnHUDPrefab;

@@ -13,6 +13,13 @@ public class SpawnManager : MonoBehaviour
     public SpawnPoint[] playerSpawns;
     public SpawnPoint[] enemySpawns;
 
+    [Header("HUD Prefabs")]
+    public GameObject playerHUDPrefab;
+    public GameObject enemyHUDPrefab;
+
+    [Header("HUD Containers")]
+    public Transform hudContainer; 
+
     private void Start()
     {
         SpawnCharacters(playerSpawns);
@@ -25,8 +32,23 @@ public class SpawnManager : MonoBehaviour
         {
             if (spawn.characterPrefab != null && spawn.position != null)
             {
-                Instantiate(spawn.characterPrefab, spawn.position.position, Quaternion.identity);
+                GameObject characterGO = Instantiate(spawn.characterPrefab, spawn.position.position, Quaternion.identity);
+                Character character = characterGO.GetComponent<Character>();
+
+                if (character != null)
+                {
+                    GameObject hudPrefab = character.team == TeamType.Player ? playerHUDPrefab : enemyHUDPrefab;
+                    GameObject hudGO = Instantiate(hudPrefab, hudContainer);
+
+                    CharacterHUD hud = hudGO.GetComponent<CharacterHUD>();
+                    if (hud != null)
+                    {
+                        bool isPlayer = character.team == TeamType.Player;
+                        hud.Init(character, isPlayer);
+                    }
+                }
             }
         }
     }
+
 }

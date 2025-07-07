@@ -1,26 +1,15 @@
 using UnityEngine;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-
 
 public class EnemyCharacter : Character
 {
     [SerializeField] private AbilitySO defaultAbility;
 
-    private void Start()
-    {
-        EnemyUIManager.Instance.RegisterEnemy(this);
-    }
-
     public override void TakeDamage(int amount)
     {
         base.TakeDamage(amount);
 
-        if (!IsAlive)
-        {
-            EnemyUIManager.Instance.UnregisterEnemy(this);
-        }
     }
 
     public override IEnumerator PerformAction()
@@ -45,16 +34,14 @@ public class EnemyCharacter : Character
         yield return defaultAbility.ActivateRoutine(this, target);
         yield return CombatVisualFeedbackManager.Instance.EndAbilityFX();
 
-        yield return new WaitForSeconds(0.5f); // breve pausa para el ritmo del combate
+        yield return new WaitForSeconds(0.5f);
     }
 
     private Character SelectTarget()
     {
-        // Obtener todos los jugadores vivos en la escena
         PlayerCharacter[] players = FindObjectsOfType<PlayerCharacter>();
 
         List<PlayerCharacter> alivePlayers = new List<PlayerCharacter>();
-
         foreach (var p in players)
         {
             if (p.IsAlive)
@@ -63,7 +50,6 @@ public class EnemyCharacter : Character
 
         if (alivePlayers.Count > 0)
         {
-            // Elegir uno al azar por ahora
             return alivePlayers[UnityEngine.Random.Range(0, alivePlayers.Count)];
         }
 

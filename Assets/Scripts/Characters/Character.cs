@@ -46,6 +46,8 @@ public abstract class Character : MonoBehaviour, ISelectable
     
     public Sprite icon; 
 
+
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();

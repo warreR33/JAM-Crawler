@@ -35,9 +35,9 @@ public class TurnManager : MonoBehaviour
     {
 
         int index = RoundManager.Instance.turnOrder.IndexOf(character);
-        if (!UIManager.Instance.IsAnimatingReset)
+        if (!TurnUIManager.Instance.IsAnimatingReset)
         {
-            UIManager.Instance.HighlightCurrentTurn(index);
+            TurnUIManager.Instance.HighlightCurrentTurn(index);
         }
 
         CurrentPhase = TurnPhase.TurnStart;

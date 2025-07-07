@@ -8,7 +8,6 @@ public class PlayerCharacter : Character
     public AbilitySO[] abilities = new AbilitySO[3];
 
 
-    public GameObject smallHudObject;
 
     public System.Action<int, int> OnEnergyChanged;
 
@@ -16,8 +15,6 @@ public class PlayerCharacter : Character
     public override IEnumerator OnTurnStart()
     {
 
-        if (smallHudObject != null)
-            smallHudObject.SetActive(false);
 
         UIActionPanel.Instance.ShowCurrentPlayerInfo(this);
 
@@ -38,9 +35,6 @@ public class PlayerCharacter : Character
         UIActionPanel.Instance.HidePlayerActionHUD();
         UIActionPanel.Instance.HideCurrentPlayerInfo();
 
-        if (smallHudObject != null)
-            smallHudObject.SetActive(true);
-
         UIActionPanel.Instance.ClearCallbacks();
     }
 
@@ -55,10 +49,6 @@ public class PlayerCharacter : Character
         SpendEnergy(ability.energyCost);
         OnPlayerActionCompleted?.Invoke();
     }
-
-
-
-
 
     public void GainEnergy(int amount)
     {
