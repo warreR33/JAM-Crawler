@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8146065043045881438
+--- !u!1 &4543278357216361442
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,39 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3591640451386380946}
-  - component: {fileID: 414420290088468238}
-  - component: {fileID: 1425693934746324605}
-  - component: {fileID: 9058049528107548474}
+  - component: {fileID: 5837832578365487010}
+  - component: {fileID: 2001261215312594441}
+  - component: {fileID: 1234889749531676750}
   m_Layer: 0
-  m_Name: Tris
+  m_Name: Tris Idle_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3591640451386380946
+--- !u!4 &5837832578365487010
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8146065043045881438}
+  m_GameObject: {fileID: 4543278357216361442}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.7806754, y: -1.0794779, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.069, y: 0.025, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 3591640451386380946}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &414420290088468238
+--- !u!212 &2001261215312594441
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8146065043045881438}
+  m_GameObject: {fileID: 4543278357216361442}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -74,48 +73,73 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
-  m_Sprite: {fileID: 21300000, guid: 90515875593d9f540a63662eb16b011e, type: 3}
+  m_SortingOrder: 3
+  m_Sprite: {fileID: 208623279, guid: 7f580bcd56f15094a992fca313fbd23c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1425693934746324605
-MonoBehaviour:
+--- !u!95 &1234889749531676750
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4543278357216361442}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b6eb3a7b32d16504cafb06503371a78f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &8146065043045881438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3591640451386380946}
+  - component: {fileID: 9058049528107548474}
+  - component: {fileID: 1669270719235951005}
+  m_Layer: 0
+  m_Name: Tris
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3591640451386380946
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8146065043045881438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1b1d728dcc9ea8438d6dc4b45bc0ba8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterName: Tris
-  team: 0
-  maxEnergy: 10
-  currentEnergy: 0
-  speed: 12
-  initiativeRoll: 0
-  maxHP: 100
-  currentHP: 100
-  power: 10
-  defense: 5
-  critChance: 0.1
-  critMultiplier: 1.5
-  icon: {fileID: 21300000, guid: fee4f58541c0b7f4399f9fe7cf9de4d5, type: 3}
-  basicAttack: {fileID: 11400000, guid: 85db80dff5a564542bdf5c04ecb75838, type: 2}
-  abilities:
-  - {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
-  - {fileID: 11400000, guid: 81eeefbf7fe58514aaa3d5c3cd58e4b5, type: 2}
-  smallHudObject: {fileID: 0}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.7806754, y: -1.0794779, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5837832578365487010}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &9058049528107548474
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -148,7 +172,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.0633986, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -159,5 +183,35 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 1.5308471, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &1669270719235951005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8146065043045881438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1b1d728dcc9ea8438d6dc4b45bc0ba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterName: Tris
+  team: 0
+  maxEnergy: 10
+  currentEnergy: 0
+  speed: 12
+  initiativeRoll: 0
+  maxHP: 100
+  currentHP: 100
+  power: 10
+  defense: 5
+  critChance: 0.1
+  critMultiplier: 1.5
+  outlineMaterial: {fileID: 0}
+  icon: {fileID: 21300000, guid: fee4f58541c0b7f4399f9fe7cf9de4d5, type: 3}
+  basicAttack: {fileID: 11400000, guid: 85db80dff5a564542bdf5c04ecb75838, type: 2}
+  abilities:
+  - {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
+  - {fileID: 11400000, guid: 81eeefbf7fe58514aaa3d5c3cd58e4b5, type: 2}

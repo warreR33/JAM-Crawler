@@ -5,8 +5,15 @@ using UnityEngine;
 public abstract class AbilitySO : ScriptableObject
 {
     public string abilityName;
-    public Sprite icon;
+
+    [TextArea]
+    public string description;
     public int energyCost;
+
+    [Header("Targeting Rules")]
+    public bool canTargetAllies = false;
+    public bool canTargetEnemies = true;
+    public bool isArea = false;
 
     public GameObject startEffectPrefab;   
     public GameObject impactEffectPrefab;

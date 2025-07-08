@@ -6,6 +6,8 @@ public class SelectionManager : MonoBehaviour
 {
     public static SelectionManager Instance;
 
+    private TeamType? allowedTargetTeam = null;
+
     private ISelectable currentSelection;
 
     private void Awake()
@@ -26,11 +28,15 @@ public class SelectionManager : MonoBehaviour
                 ISelectable selectable = hit.collider.GetComponent<ISelectable>();
                 Character character = hit.collider.GetComponent<Character>();
 
-                // Si estamos en modo de selección de objetivo para una habilidad:
                 if (character != null && UIActionPanel.Instance.IsTargeting)
                 {
+                    if (allowedTargetTeam != null && character.team != allowedTargetTeam.Value)
+                    {
+                        Debug.Log("Objetivo inválido: no se puede seleccionar este equipo.");
+                        return;
+                    }
                     UIActionPanel.Instance.OnCharacterClicked(character);
-                    return; // Evita continuar con selección normal
+                    return;
                 }
 
                 // Selección normal
@@ -52,6 +58,11 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
+    public void SetAllowedTargetTeam(TeamType? team)
+    {
+        allowedTargetTeam = team;
+    }
+
     public void ClearSelection()
     {
         if (currentSelection != null)
@@ -60,6 +71,7 @@ public class SelectionManager : MonoBehaviour
             Debug.Log($"Se deseleccionó: {currentSelection}");
         }
 
+        allowedTargetTeam = null;
         currentSelection = null;
     }
 

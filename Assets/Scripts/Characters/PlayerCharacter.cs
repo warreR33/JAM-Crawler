@@ -7,17 +7,11 @@ public class PlayerCharacter : Character
     public AbilitySO basicAttack;
     public AbilitySO[] abilities = new AbilitySO[3];
 
-
-
     public System.Action<int, int> OnEnergyChanged;
 
 
     public override IEnumerator OnTurnStart()
     {
-
-
-        UIActionPanel.Instance.ShowCurrentPlayerInfo(this);
-
         GainEnergy(1);
         yield return null;
     }
@@ -33,20 +27,26 @@ public class PlayerCharacter : Character
             yield return null;
 
         UIActionPanel.Instance.HidePlayerActionHUD();
-        UIActionPanel.Instance.HideCurrentPlayerInfo();
-
         UIActionPanel.Instance.ClearCallbacks();
     }
 
     public IEnumerator UseAbility(AbilitySO ability, Character target)
     {
-        if (ability == null || target == null) yield break;
+        if (ability == null) yield break;
 
-        yield return StartCoroutine(CombatVisualFeedbackManager.Instance.PlayAbilityStartFX(ability.abilityName));
+        if (team == TeamType.Player)
+            yield return StartCoroutine(MoveForward());
+
         yield return StartCoroutine(ability.ActivateRoutine(this, target));
-        yield return StartCoroutine(CombatVisualFeedbackManager.Instance.EndAbilityFX());
+
+        if (team == TeamType.Player)
+            yield return StartCoroutine(MoveBack());
 
         SpendEnergy(ability.energyCost);
+
+        if (Animator != null)
+            Animator.SetTrigger("Idle");
+
         OnPlayerActionCompleted?.Invoke();
     }
 
@@ -54,7 +54,6 @@ public class PlayerCharacter : Character
     {
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
         OnEnergyChanged?.Invoke(currentEnergy, maxEnergy);
-        UIActionPanel.Instance.ShowCurrentPlayerInfo(this);
     }
 
     public bool SpendEnergy(int amount)

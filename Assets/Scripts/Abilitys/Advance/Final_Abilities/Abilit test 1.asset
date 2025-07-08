@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Abilit test 1
   m_EditorClassIdentifier: 
   abilityName: Salto del lince
-  icon: {fileID: 21300000, guid: 76b807f718df58548b69e7089a479f02, type: 3}
+  description: Apply Dizzy effect
   energyCost: 2
   startEffectPrefab: {fileID: 7627099760626138996, guid: 46f796d4ea70f074987700cacf6e8804, type: 3}
   impactEffectPrefab: {fileID: 5191405745487512432, guid: 9d20d62e6a49e2f4a86b003a16d98130, type: 3}

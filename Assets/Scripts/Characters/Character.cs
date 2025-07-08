@@ -34,8 +34,10 @@ public abstract class Character : MonoBehaviour, ISelectable
     [Range(0f, 1f)]
     public float critChance = 0.1f;       
     public float critMultiplier = 1.5f;   
+    
 
     public bool IsAlive => currentHP > 0;
+    private Vector3? originalLocalPosition = null;
     
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
@@ -43,23 +45,30 @@ public abstract class Character : MonoBehaviour, ISelectable
     private bool isHovered = false;
 
     private List<Debuff> activeDebuffs = new List<Debuff>();
+    private List<Buff> activeBuffs = new List<Buff>();
+
+    public Vector3 SpriteWorldPosition => spriteRenderer.transform.position;
     
     public Sprite icon; 
+
+    public Animator Animator { get; private set; }
 
 
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         originalColor = spriteRenderer.color;
+        Animator = GetComponentInChildren<Animator>();
     }
 
     public virtual void TakeDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - amount);
         Debug.Log($"{characterName} recibe {amount} de daño. HP restante: {currentHP}");
-    }
 
+        StartCoroutine(ShakeSprite());
+    }
     public void Heal(int amount)
     {
         currentHP = Mathf.Min(maxHP, currentHP + amount);
@@ -72,8 +81,15 @@ public abstract class Character : MonoBehaviour, ISelectable
         activeDebuffs.Add(newDebuff);
     }
 
+    public void AddBuff(BuffType type, int duration)
+    {
+        Buff buff = new Buff(type, duration, this);
+        activeBuffs.Add(buff);
+    }
+
     public virtual IEnumerator OnTurnStart()
     {
+        ApplyBuffsAtTurnStart();
         ApplyDebuffsAtTurnStart();
         yield return null;
     }
@@ -85,7 +101,6 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public virtual IEnumerator OnTurnEnd()
     {
-        UIActionPanel.Instance.HideCurrentPlayerInfo();
         yield return null;
     }
 
@@ -108,6 +123,86 @@ public abstract class Character : MonoBehaviour, ISelectable
             debuff.CleanUp();
             activeDebuffs.Remove(debuff);
         }
+    }
+
+    
+    public void ApplyBuffsAtTurnStart()
+    {
+        List<Buff> expired = new List<Buff>();
+
+        foreach (var buff in activeBuffs)
+        {
+            buff.ApplyTurnEffect();
+            if (buff.IsExpired())
+                expired.Add(buff);
+        }
+
+        foreach (var buff in expired)
+        {
+            buff.CleanUp();
+            activeBuffs.Remove(buff);
+        }
+    }
+
+    public IEnumerator MoveForward(float distance = 4f, float duration = 0.1f)
+    {
+        Transform spriteTransform = spriteRenderer.transform;
+
+        if (originalLocalPosition == null)
+            originalLocalPosition = spriteTransform.localPosition;
+
+        Vector3 from = spriteTransform.localPosition;
+        Vector3 to = from + Vector3.right * distance * (team == TeamType.Player ? 1 : -1);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            spriteTransform.localPosition = Vector3.Lerp(from, to, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        spriteTransform.localPosition = to;
+    }
+
+    public IEnumerator MoveBack(float duration = 0.1f)
+    {
+        if (originalLocalPosition == null)
+            yield break;
+
+        Transform spriteTransform = spriteRenderer.transform;
+        Vector3 from = spriteTransform.localPosition;
+        Vector3 to = originalLocalPosition.Value;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            spriteTransform.localPosition = Vector3.Lerp(from, to, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        spriteTransform.localPosition = to;
+        originalLocalPosition = null;
+    }
+
+    public IEnumerator ShakeSprite(float intensity = 0.1f, float duration = 0.15f)
+    {
+        Transform spriteTransform = spriteRenderer.transform;
+        Vector3 originalPos = spriteTransform.localPosition;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float offsetX = Random.Range(-intensity, intensity);
+            float offsetY = Random.Range(-intensity, intensity);
+
+            spriteTransform.localPosition = originalPos + new Vector3(offsetX, offsetY, 0);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        spriteTransform.localPosition = originalPos;
     }
 
     private void OnMouseEnter()

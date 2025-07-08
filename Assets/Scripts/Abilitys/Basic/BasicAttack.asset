@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: BasicAttack
   m_EditorClassIdentifier: 
   abilityName: Slash
-  icon: {fileID: 21300000, guid: 864077c48d6d03c4b8bd62d3d24872e9, type: 3}
+  description: 
   energyCost: 0
+  canTargetAllies: 0
+  canTargetEnemies: 1
+  isArea: 0
   startEffectPrefab: {fileID: 4917130066423612987, guid: d4e6f368c5170ad4aa1c5ca1bb5af02c, type: 3}
   impactEffectPrefab: {fileID: 7627099760626138996, guid: 46f796d4ea70f074987700cacf6e8804, type: 3}
   powerMultiplier: 1.2

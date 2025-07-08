@@ -17,7 +17,7 @@ public class BasicAttack : AbilitySO
 
         if (startEffectPrefab != null)
         {
-            GameObject.Instantiate(startEffectPrefab, user.transform.position, Quaternion.identity);
+            GameObject.Instantiate(startEffectPrefab, user.SpriteWorldPosition, Quaternion.identity);
             yield return new WaitForSeconds(0.3f);
         }
 
