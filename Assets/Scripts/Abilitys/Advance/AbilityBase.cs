@@ -7,6 +7,8 @@ public class AbilityBase : AbilitySO
 {
     public List<AbilityActionSO> actions;
 
+    [SerializeField] private GameObject quickTimeEventPrefab;
+
     public override IEnumerator ActivateRoutine(Character user, Character target)
     {
         // Habilidad normal (no en área)
@@ -16,38 +18,7 @@ public class AbilityBase : AbilitySO
         }
         else
         {
-            // Obtener todos los objetivos válidos según reglas
-            List<Character> targets = new List<Character>();
-
-            if (canTargetEnemies)
-                targets.AddRange(FindCharactersByTeam(TeamType.Enemy));
-
-            if (canTargetAllies)
-                targets.AddRange(FindCharactersByTeam(TeamType.Player));
-
-            // Mostrar efecto y animación SOLO una vez
-            yield return CombatVisualFeedbackManager.Instance.PlayAbilityStartFX(abilityName);
-
-            if (startEffectPrefab != null)
-            {
-                GameObject.Instantiate(startEffectPrefab, user.SpriteWorldPosition, Quaternion.identity);
-                yield return new WaitForSeconds(0.3f);
-            }
-
-            foreach (var t in targets)
-            {
-                foreach (var action in actions)
-                {
-                    action.Execute(user, t, this);
-
-                    if (impactEffectPrefab != null)
-                        GameObject.Instantiate(impactEffectPrefab, t.transform.position, Quaternion.identity);
-                }
-
-                yield return new WaitForSeconds(0.1f); // Pequeña pausa entre cada objetivo
-            }
-
-            yield return CombatVisualFeedbackManager.Instance.EndAbilityFX();
+            // Área (opcional de actualizar después)
         }
     }
 
@@ -63,12 +34,20 @@ public class AbilityBase : AbilitySO
 
         foreach (var action in actions)
         {
-            action.Execute(user, target, this);
+            SkillCheckResult result = SkillCheckResult.Normal;
+            bool isDone = false;
 
-            if (impactEffectPrefab != null)
+            GameObject qteGO = GameObject.Instantiate(quickTimeEventPrefab, GameObject.Find("Canvas").transform);
+            SkillCheckUI qte = qteGO.GetComponent<SkillCheckUI>();
+
+            qte.StartSkillCheck((r) =>
             {
-                GameObject.Instantiate(impactEffectPrefab, target.transform.position, Quaternion.identity);
-            }
+                result = r;
+                isDone = true;
+            });
+
+            yield return new WaitUntil(() => isDone);
+            yield return action.Execute(user, target, this, result);
 
             yield return new WaitForSeconds(0.2f);
         }

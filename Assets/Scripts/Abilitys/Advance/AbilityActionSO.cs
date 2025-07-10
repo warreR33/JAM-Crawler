@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class AbilityActionSO : ScriptableObject
 {
-    public abstract void Execute(Character user, Character target, AbilitySO abilityUsed);
+    public abstract IEnumerator  Execute(Character user, Character target, AbilitySO abilityUsed,SkillCheckResult result);
 }

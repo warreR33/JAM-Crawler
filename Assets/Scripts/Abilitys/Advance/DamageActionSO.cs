@@ -28,19 +28,24 @@ public class DamageActionSO : AbilityActionSO
     public float multiplier = 1f;
     public ElementType element = ElementType.None;
 
-    public override void Execute(Character user, Character target, AbilitySO abilityUsed)
+    public override IEnumerator Execute(Character user, Character target, AbilitySO abilityUsed, SkillCheckResult result)
     {
-        int baseValue = GetStatValue(user, scalingStat);
-        int damage = Mathf.RoundToInt(baseValue * multiplier);
-        target.TakeDamage(damage);
+        float finalMultiplier = multiplier;
+        if (result == SkillCheckResult.Success)
+            finalMultiplier *= 1.5f;
 
-        Debug.Log($"{user.characterName} inflige {damage} de daño elemental {element} a {target.characterName}");
+        int baseValue = GetStatValue(user, scalingStat);
+        int damage = Mathf.RoundToInt(baseValue * finalMultiplier);
+
+        target.TakeDamage(damage);
+        Debug.Log($"{user.characterName} inflige {damage} de daño ({result}) a {target.characterName}");
 
         if (abilityUsed.impactEffectPrefab != null)
-        {
             GameObject.Instantiate(abilityUsed.impactEffectPrefab, target.transform.position, Quaternion.identity);
-        }
+
+        yield return null;
     }
+
 
     private int GetStatValue(Character character, StatType stat)
     {

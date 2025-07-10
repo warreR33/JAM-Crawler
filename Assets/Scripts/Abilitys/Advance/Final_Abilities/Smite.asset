@@ -22,3 +22,4 @@ MonoBehaviour:
   impactEffectPrefab: {fileID: 7627099760626138996, guid: 46f796d4ea70f074987700cacf6e8804, type: 3}
   actions:
   - {fileID: 11400000, guid: ba2354d8e48afe14992db9ff2699db73, type: 2}
+  quickTimeEventPrefab: {fileID: 5336604106145650518, guid: 70c26a3eb0fa746428b0b80ea3a8a376, type: 3}

@@ -30,9 +30,7 @@ public abstract class Character : MonoBehaviour, ISelectable
     [Header("Combate")]
     public int power = 10;                 
     public int defense = 5;               
-
-    [Range(0f, 1f)]
-    public float critChance = 0.1f;       
+      
     public float critMultiplier = 1.5f;   
     
 
