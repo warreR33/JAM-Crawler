@@ -11,6 +11,7 @@ public enum TeamType
 public abstract class Character : MonoBehaviour, ISelectable
 {
 
+    private StatusEffectIconDatabase iconDatabase;
     public System.Action OnPlayerActionCompleted;
 
     [Header("Identidad")]
@@ -45,6 +46,8 @@ public abstract class Character : MonoBehaviour, ISelectable
     private List<Debuff> activeDebuffs = new List<Debuff>();
     private List<Buff> activeBuffs = new List<Buff>();
 
+    public CharacterHUD HUD { get; set; }
+
     public Vector3 SpriteWorldPosition => spriteRenderer.transform.position;
     
     public Sprite icon; 
@@ -58,34 +61,37 @@ public abstract class Character : MonoBehaviour, ISelectable
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         Animator = GetComponentInChildren<Animator>();
+        
     }
 
     public virtual void TakeDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - amount);
-        Debug.Log($"{characterName} recibe {amount} de daño. HP restante: {currentHP}");
 
         StartCoroutine(ShakeSprite());
     }
     public void Heal(int amount)
     {
         currentHP = Mathf.Min(maxHP, currentHP + amount);
-        Debug.Log($"{characterName} recupera {amount} de vida. HP actual: {currentHP}");
     }
 
     public void AddDebuff(DebuffType type, int duration)
     {
         var newDebuff = new Debuff(type, duration, this);
-        var category = newDebuff.Category;
+        var category = DebuffUtils.GetCategory(type);
 
         Debuff existing = activeDebuffs.Find(d => d.Category == category);
         if (existing != null)
         {
             existing.CleanUp();
             activeDebuffs.Remove(existing);
+            HUD?.RemoveDebuffIcon(existing.Type); // ← ahora se usa DebuffType
         }
 
         activeDebuffs.Add(newDebuff);
+
+        Sprite icon = StatusEffectIconDatabase.GetDebuffIcon(type); // ← estático
+        HUD?.AddDebuffIcon(type, icon, duration);
     }
 
     public void AddBuff(BuffType type, int duration)
@@ -93,18 +99,35 @@ public abstract class Character : MonoBehaviour, ISelectable
         var newBuff = new Buff(type, duration, this);
         var category = newBuff.Category;
 
+        Debug.Log($"[Character] AddBuff llamado con {type}, duración {duration}");
+
+        // Reemplazar cualquier buff existente de la misma categoría
         Buff existing = activeBuffs.Find(b => b.Category == category);
         if (existing != null)
         {
+            Debug.Log($"[Character] Se reemplaza buff {existing.Type} por {type} en categoría {category}");
             existing.CleanUp();
             activeBuffs.Remove(existing);
+            HUD?.RemoveBuffIcon(existing.Type);
         }
 
         activeBuffs.Add(newBuff);
+
+        // Mostrar ícono
+        Sprite icon = StatusEffectIconDatabase.GetBuffIcon(type);
+        if (HUD == null)
+        {
+            Debug.LogWarning($"[Character] HUD es NULL para {characterName}");
+        }
+        else
+        {
+            Debug.Log($"[Character] HUD existe, se intenta agregar icono de {type}");
+            HUD.AddBuffIcon(type, icon, duration);
+        }
     }
+
     public virtual IEnumerator OnTurnStart()
     {
-        ApplyBuffsAtTurnStart();
         ApplyDebuffsAtTurnStart();
         yield return null;
     }
@@ -116,38 +139,51 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public virtual IEnumerator OnTurnEnd()
     {
+        ApplyBuffsAtTurnEnd();
         yield return null;
     }
 
-    public void ApplyDebuffsAtTurnStart()
+   public void ApplyDebuffsAtTurnStart()
     {
-        List<Debuff> expired = new List<Debuff>();
+        List<Debuff> expired = new();
 
-        foreach (Debuff debuff in activeDebuffs)
+        foreach (var debuff in activeDebuffs)
         {
             debuff.ApplyTurnEffect();
 
+            if (HUD != null)
+                HUD.UpdateDebuffDuration(debuff.Type, debuff.Duration);
+
             if (debuff.IsExpired())
-            {
                 expired.Add(debuff);
-            }
         }
 
-        foreach (Debuff debuff in expired)
+        foreach (var debuff in expired)
         {
             debuff.CleanUp();
             activeDebuffs.Remove(debuff);
+            HUD?.RemoveDebuffIcon(debuff.Type);
         }
     }
-
     
-    public void ApplyBuffsAtTurnStart()
+    public void ApplyBuffsAtTurnEnd()
     {
-        List<Buff> expired = new List<Buff>();
+        List<Buff> expired = new();
 
         foreach (var buff in activeBuffs)
         {
-            buff.ApplyTurnEffect();
+            if (buff.WasJustApplied)
+            {
+                // Lo marcamos como "ya aplicado", pero no reducimos duración todavía
+                buff.WasJustApplied = false;
+                continue;
+            }
+
+            buff.Duration--;
+            Debug.Log($"[Buff] {buff.Type} reduce duración a {buff.Duration}");
+
+            HUD?.UpdateBuffDuration(buff.Type, buff.Duration);
+
             if (buff.IsExpired())
                 expired.Add(buff);
         }
@@ -156,8 +192,12 @@ public abstract class Character : MonoBehaviour, ISelectable
         {
             buff.CleanUp();
             activeBuffs.Remove(buff);
+            HUD?.RemoveBuffIcon(buff.Type);
+            Debug.Log($"[Character] Buff {buff.Type} ha expirado al final del turno.");
         }
     }
+
+    
 
     public IEnumerator MoveForward(float distance = 4f, float duration = 0.1f)
     {

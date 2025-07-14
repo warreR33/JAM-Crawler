@@ -25,7 +25,6 @@ public class BasicAttack : AbilitySO
         float damage = Mathf.Max(0, attackPower - target.defense);
 
         target.TakeDamage(Mathf.RoundToInt(damage));
-        Debug.Log($"{user.characterName} usa {abilityName} en {target.characterName}, causando {damage} de daño.");
 
         if (impactEffectPrefab != null)
         {

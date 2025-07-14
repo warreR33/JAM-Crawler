@@ -39,12 +39,14 @@ public class SpawnManager : MonoBehaviour
                 {
                     GameObject hudPrefab = character.team == TeamType.Player ? playerHUDPrefab : enemyHUDPrefab;
                     GameObject hudGO = Instantiate(hudPrefab, hudContainer);
-
+                    
+                    
                     CharacterHUD hud = hudGO.GetComponent<CharacterHUD>();
                     if (hud != null)
                     {
                         bool isPlayer = character.team == TeamType.Player;
                         hud.Init(character, isPlayer);
+                        character.HUD = hud;
                     }
                 }
             }

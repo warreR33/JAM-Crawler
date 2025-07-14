@@ -18,7 +18,7 @@ public class AbilityBase : AbilitySO
         }
         else
         {
-            // Área (opcional de actualizar después)
+             yield return ExecuteArea(user);
         }
     }
 
@@ -64,5 +64,48 @@ public class AbilityBase : AbilitySO
                 result.Add(c);
         }
         return result;
+    }
+
+
+    private IEnumerator ExecuteArea(Character user)
+    {
+        yield return CombatVisualFeedbackManager.Instance.PlayAbilityStartFX(abilityName);
+
+        if (startEffectPrefab != null)
+        {
+            GameObject.Instantiate(startEffectPrefab, user.SpriteWorldPosition, Quaternion.identity);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        // Elegimos el equipo contrario como objetivo
+        TeamType targetTeam = user.team == TeamType.Player ? TeamType.Enemy : TeamType.Player;
+        List<Character> targets = FindCharactersByTeam(targetTeam);
+
+        foreach (var target in targets)
+        {
+            if (!target.IsAlive) continue;
+
+            foreach (var action in actions)
+            {
+                SkillCheckResult result = SkillCheckResult.Normal;
+                bool isDone = false;
+
+                GameObject qteGO = GameObject.Instantiate(quickTimeEventPrefab, GameObject.Find("Canvas").transform);
+                SkillCheckUI qte = qteGO.GetComponent<SkillCheckUI>();
+
+                qte.StartSkillCheck((r) =>
+                {
+                    result = r;
+                    isDone = true;
+                });
+
+                yield return new WaitUntil(() => isDone);
+                yield return action.Execute(user, target, this, result);
+
+                yield return new WaitForSeconds(0.2f);
+            }
+        }
+
+        yield return CombatVisualFeedbackManager.Instance.EndAbilityFX();
     }
 }

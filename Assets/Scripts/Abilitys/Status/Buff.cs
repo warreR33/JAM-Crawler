@@ -25,9 +25,11 @@ public class Buff
 
 
     public BuffType Type { get; private set; }
-    public int Duration { get; private set; }
+    public int Duration { get;  set; }
+    public bool WasJustApplied { get; set; } = true;
     private int storedValue;
     private Character target;
+    
 
     public BuffCategory Category
     {
@@ -63,6 +65,10 @@ public class Buff
 
     private void ApplyInitialEffect()
     {
+
+        Duration--;
+        Debug.Log($"[Buff] {Type} se aplica, quedan {Duration} turnos.");
+
         switch (Type)
         {
             case BuffType.WeakStrength:

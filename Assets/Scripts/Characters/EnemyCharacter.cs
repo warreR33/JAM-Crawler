@@ -28,7 +28,6 @@ public class EnemyCharacter : Character
             yield break;
         }
 
-        Debug.Log($"{characterName} va a usar {defaultAbility.abilityName} sobre {target.characterName}");
 
         yield return CombatVisualFeedbackManager.Instance.PlayAbilityStartFX(defaultAbility.abilityName);
         yield return defaultAbility.ActivateRoutine(this, target);
