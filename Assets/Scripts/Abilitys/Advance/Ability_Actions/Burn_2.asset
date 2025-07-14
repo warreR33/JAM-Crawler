@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9140a7c9d7de06d4684c9a1b869b17e8, type: 3}
   m_Name: Burn_2
   m_EditorClassIdentifier: 
-  debuffType: 0
-  duration: 2
+  weakDebuffType: 0
+  strongDebuffType: 1
+  weakDuration: 2
+  strongDuration: 4

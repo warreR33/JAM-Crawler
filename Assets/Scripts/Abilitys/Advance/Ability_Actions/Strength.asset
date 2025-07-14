@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1f3cbcf05504840a144f8cf3aa61db, type: 3}
   m_Name: Strength
   m_EditorClassIdentifier: 
-  buffType: 1
-  duration: 3
+  weakBuffType: 2
+  strongBuffType: 3
+  weakDuration: 2
+  strongDuration: 4
