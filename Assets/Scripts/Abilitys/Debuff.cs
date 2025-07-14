@@ -1,17 +1,57 @@
 using UnityEngine;
-
 public enum DebuffType
 {
-    Burn,
-    Dizzy
+    WeakBurn,
+    StrongBurn,
+    WeakDizzy,
+    StrongDizzy,
+    WeakWeaken,
+    StrongWeaken,
+    WeakBleeding,
+    StrongBleeding
 }
+
+public enum DebuffCategory
+{
+    Burn,
+    Dizzy,
+    Weaken,
+    Bleeding
+}
+
 
 public class Debuff
 {
+
+   
+
     public DebuffType Type { get; private set; }
     public int Duration { get; private set; }
-    private int storedValue; 
+    private int storedValue;
     private Character target;
+    
+    public DebuffCategory Category
+    {
+        get
+        {
+            switch (Type)
+            {
+                case DebuffType.WeakBurn:
+                case DebuffType.StrongBurn: return DebuffCategory.Burn;
+
+                case DebuffType.WeakDizzy:
+                case DebuffType.StrongDizzy: return DebuffCategory.Dizzy;
+
+                case DebuffType.WeakWeaken:
+                case DebuffType.StrongWeaken: return DebuffCategory.Weaken;
+
+                case DebuffType.WeakBleeding:
+                case DebuffType.StrongBleeding: return DebuffCategory.Bleeding;
+
+                default: throw new System.Exception("Unknown DebuffType");
+            }
+        }
+    }
 
     public Debuff(DebuffType type, int duration, Character target)
     {
@@ -19,21 +59,42 @@ public class Debuff
         this.Duration = duration;
         this.target = target;
 
-        ApplyInitialEffect(); 
+        ApplyInitialEffect();
     }
 
     private void ApplyInitialEffect()
     {
         switch (Type)
         {
-            case DebuffType.Dizzy:
-                storedValue = Mathf.CeilToInt(target.speed * 0.1f);
+            case DebuffType.WeakDizzy:
+                storedValue = Mathf.CeilToInt(target.speed * 0.15f);
                 target.speed -= storedValue;
-                Debug.Log($"{target.characterName} sufre Dizzy: velocidad reducida en {storedValue}");
+                Debug.Log($"{target.characterName} sufre Weak Dizzy: velocidad reducida en {storedValue}");
                 break;
 
-            case DebuffType.Burn:
-                // Burn no tiene efecto inicial
+            case DebuffType.StrongDizzy:
+                storedValue = Mathf.CeilToInt(target.speed * 0.30f);
+                target.speed -= storedValue;
+                Debug.Log($"{target.characterName} sufre Strong Dizzy: velocidad reducida en {storedValue}");
+                break;
+
+            case DebuffType.WeakWeaken:
+                storedValue = Mathf.CeilToInt(target.defense * 0.30f);
+                target.defense -= storedValue;
+                Debug.Log($"{target.characterName} sufre Weak Weaken: defensa reducida en {storedValue}");
+                break;
+
+            case DebuffType.StrongWeaken:
+                storedValue = Mathf.CeilToInt(target.defense * 0.50f);
+                target.defense -= storedValue;
+                Debug.Log($"{target.characterName} sufre Strong Weaken: defensa reducida en {storedValue}");
+                break;
+
+            case DebuffType.WeakBurn:
+            case DebuffType.StrongBurn:
+            case DebuffType.WeakBleeding:
+            case DebuffType.StrongBleeding:
+                // Sin efecto inmediato
                 break;
         }
     }
@@ -42,14 +103,21 @@ public class Debuff
     {
         switch (Type)
         {
-            case DebuffType.Burn:
-                int burnDamage = Mathf.CeilToInt(target.maxHP * 0.05f);
-                target.TakeDamage(burnDamage);
-                Debug.Log($"{target.characterName} sufre {burnDamage} de daño por Burn.");
+            case DebuffType.WeakBurn:
+                int burn1 = Mathf.CeilToInt(target.maxHP * 0.025f);
+                target.TakeDamage(burn1);
+                Debug.Log($"{target.characterName} sufre {burn1} de daño por Weak Burn.");
                 break;
 
-            case DebuffType.Dizzy:
-                // Nada por turno, el efecto es inmediato
+            case DebuffType.StrongBurn:
+                int burn2 = Mathf.CeilToInt(target.maxHP * 0.05f);
+                target.TakeDamage(burn2);
+                Debug.Log($"{target.characterName} sufre {burn2} de daño por Strong Burn.");
+                break;
+
+            case DebuffType.WeakBleeding:
+            case DebuffType.StrongBleeding:
+                // Se manejará en el sistema de curación
                 break;
         }
 
@@ -60,19 +128,30 @@ public class Debuff
     {
         switch (Type)
         {
-            case DebuffType.Dizzy:
+            case DebuffType.WeakDizzy:
+            case DebuffType.StrongDizzy:
                 target.speed += storedValue;
-                Debug.Log($"{target.characterName} recupera {storedValue} de velocidad al terminar Dizzy.");
+                Debug.Log($"{target.characterName} recupera {storedValue} de velocidad.");
                 break;
 
-            case DebuffType.Burn:
-                // Nada que limpiar
+            case DebuffType.WeakWeaken:
+            case DebuffType.StrongWeaken:
+                target.defense += storedValue;
+                Debug.Log($"{target.characterName} recupera {storedValue} de defensa.");
                 break;
         }
     }
 
-    public bool IsExpired()
+    public bool IsExpired() => Duration <= 0;
+
+    public float GetHealingModifier()
     {
-        return Duration <= 0;
+        switch (Type)
+        {
+            case DebuffType.WeakBleeding: return 0.5f;
+            case DebuffType.StrongBleeding: return 0.0f; // 100% reducción
+            default: return 1f; // no afecta curación
+        }
     }
 }
+

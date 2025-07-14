@@ -75,16 +75,33 @@ public abstract class Character : MonoBehaviour, ISelectable
 
     public void AddDebuff(DebuffType type, int duration)
     {
-        Debuff newDebuff = new Debuff(type, duration, this);
+        var newDebuff = new Debuff(type, duration, this);
+        var category = newDebuff.Category;
+
+        Debuff existing = activeDebuffs.Find(d => d.Category == category);
+        if (existing != null)
+        {
+            existing.CleanUp();
+            activeDebuffs.Remove(existing);
+        }
+
         activeDebuffs.Add(newDebuff);
     }
 
     public void AddBuff(BuffType type, int duration)
     {
-        Buff buff = new Buff(type, duration, this);
-        activeBuffs.Add(buff);
-    }
+        var newBuff = new Buff(type, duration, this);
+        var category = newBuff.Category;
 
+        Buff existing = activeBuffs.Find(b => b.Category == category);
+        if (existing != null)
+        {
+            existing.CleanUp();
+            activeBuffs.Remove(existing);
+        }
+
+        activeBuffs.Add(newBuff);
+    }
     public virtual IEnumerator OnTurnStart()
     {
         ApplyBuffsAtTurnStart();
