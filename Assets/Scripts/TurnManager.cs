@@ -10,7 +10,7 @@ public enum Phase
     TurnEnd,
     RoundEnd
 }
-    
+
 public class TurnManager : MonoBehaviour
 {
     public static bool TurnFinished { get; private set; }
@@ -27,6 +27,8 @@ public class TurnManager : MonoBehaviour
 
     public static void StartTurn(Character character)
     {
+        if (CheckBattleEnd()) return;
+        
         TurnFinished = false;
         runner.StartCoroutine(HandleTurn(character));
     }
@@ -50,5 +52,38 @@ public class TurnManager : MonoBehaviour
         yield return character.OnTurnEnd();
 
         TurnFinished = true;
+    }
+    
+
+    private static bool CheckBattleEnd()
+    {
+        Character[] characters = GameObject.FindObjectsOfType<Character>();
+
+        bool enemiesAlive = false;
+        bool playersAlive = false;
+
+        foreach (var c in characters)
+        {
+            if (!c.IsAlive) continue;
+
+            if (c.team == TeamType.Player) playersAlive = true;
+            if (c.team == TeamType.Enemy) enemiesAlive = true;
+        }
+
+        if (!playersAlive)
+        {
+            Debug.Log("¡Has sido derrotado!");
+            // Ir a pantalla de derrota
+            return true;
+        }
+
+        if (!enemiesAlive)
+        {
+            Debug.Log("¡Ganaste el combate!");
+            GameStateManager.Instance.LoadDungeonScene();
+            return true;
+        }
+
+        return false; // La batalla sigue
     }
 }

@@ -23,6 +23,17 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         SpawnCharacters(playerSpawns);
+
+        // Reemplazamos enemySpawns con lo que venga del CombatDataManager
+        if (CombatDataManager.Instance != null)
+        {
+            var enemies = CombatDataManager.Instance.enemiesToSpawn;
+            for (int i = 0; i < Mathf.Min(enemies.Count, enemySpawns.Length); i++)
+            {
+                enemySpawns[i].characterPrefab = enemies[i];
+            }
+        }
+
         SpawnCharacters(enemySpawns);
     }
 
