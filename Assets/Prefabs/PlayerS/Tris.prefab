@@ -211,6 +211,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: fee4f58541c0b7f4399f9fe7cf9de4d5, type: 3}
   basicAttack: {fileID: 11400000, guid: 85db80dff5a564542bdf5c04ecb75838, type: 2}
   abilities:
-  - {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
-  - {fileID: 11400000, guid: 81eeefbf7fe58514aaa3d5c3cd58e4b5, type: 2}
-  - {fileID: 11400000, guid: b563d5be6f3ccb84d9b993ee260ad53e, type: 2}
+  - {fileID: 11400000, guid: 70d4a0d08db6d51459a476e02448a648, type: 2}
+  - {fileID: 11400000, guid: aa0cdbb1715c78949906f6542a5d110f, type: 2}
+  - {fileID: 11400000, guid: 2e2ad3941f4a4734bbc12f13e80655a0, type: 2}

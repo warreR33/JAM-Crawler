@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bdc760e29bba04469204366e00fe718, type: 3}
-  m_Name: FireBall
+  m_Name: Healing_Tides
   m_EditorClassIdentifier: 
-  abilityName: FireBall
-  description: Do normal damage and apply burn
-  energyCost: 2
-  canTargetAllies: 0
-  canTargetEnemies: 1
+  abilityName: 
+  description: 
+  energyCost: 1
+  canTargetAllies: 1
+  canTargetEnemies: 0
   isArea: 0
-  startEffectPrefab: {fileID: 5191405745487512432, guid: 9d20d62e6a49e2f4a86b003a16d98130, type: 3}
-  impactEffectPrefab: {fileID: 7627099760626138996, guid: 46f796d4ea70f074987700cacf6e8804, type: 3}
+  startEffectPrefab: {fileID: 0}
+  impactEffectPrefab: {fileID: 0}
   actions:
-  - {fileID: 11400000, guid: 0cdaa343e7e8f2045afaab6ed4ac72ed, type: 2}
-  - {fileID: 11400000, guid: 228d08f8bef6b0345b6715a9d4c3c3f6, type: 2}
+  - {fileID: 11400000, guid: 573078aac25b275449bf63bfd85d7b2c, type: 2}
   quickTimeEventPrefab: {fileID: 5336604106145650518, guid: 70c26a3eb0fa746428b0b80ea3a8a376, type: 3}
